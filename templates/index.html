@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Encryption</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #f0f2f5;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+
+        .box {
+            width: 40%;
+        }
+
+        img {
+            width: 100%;
+            border: 2px solid black;
+            margin-top: 10px;
+        }
+
+        pre {
+            background: #fff;
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🔐 Image Encryption & Decryption</h1>
+
+<form action="/process" method="post" enctype="multipart/form-data">
+
+    <input type="file" name="image" required><br><br>
+
+    <input type="number" name="key" placeholder="Enter key" required><br><br>
+
+    <button type="submit" name="action" value="encrypt">Encrypt</button>
+    <button type="submit" name="action" value="decrypt">Decrypt</button>
+
+</form>
+
+<div class="container">
+
+    <!-- LEFT SIDE -->
+    <div class="box">
+        <h3>Input Image</h3>
+        {% if original_img %}
+        <img src="data:image/png;base64,{{ original_img }}">
+        {% endif %}
+
+        <h4>Pixels (5x5)</h4>
+        <pre>{{ original_pixels }}</pre>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="box">
+        <h3>
+            {% if action == "encrypt" %}
+                Encrypted Image
+            {% else %}
+                Decrypted Image
+            {% endif %}
+        </h3>
+
+        {% if result_img %}
+        <img src="data:image/png;base64,{{ result_img }}">
+        {% endif %}
+
+        <h4>Pixels (5x5)</h4>
+        <pre>{{ result_pixels }}</pre>
+
+        <!-- DOWNLOAD BUTTON -->
+        {% if result_img %}
+        <br>
+        <a href="data:image/png;base64,{{ result_img }}" 
+           download="{{ 'encrypted.png' if action=='encrypt' else 'decrypted.png' }}">
+            <button>Download Image</button>
+        </a>
+        {% endif %}
+    </div>
+
+</div>
+
+</body>
+</html>
